@@ -1,0 +1,17 @@
+# Life axpectancy at birth in Canada, seperated by sex
+require(rio)
+data_raw <- import("C:/res.txt")
+require(dplyr)
+data_sub <- data_raw%>% filter(Country=="CAN")%>%
+  filter(Age==0)
+
+require(ggplot2)
+colnames(data_sub)[20] <- "life_expactancy"
+data_sub$Sex <- factor(data_sub$Sex,levels = c(1,2))
+data_analysis <- data_sub%>%group_by(Year1,Sex)%>%
+  summarise(meanE = mean(life_expactancy))
+
+ggplot(data = data_analysis,mapping = aes(Year1,meanE,color=Sex))+
+  geom_line()+
+  labs(title = "Life expectancy of birth in Canada")+
+  xlab("Year")+ylab("Life expectancy")
